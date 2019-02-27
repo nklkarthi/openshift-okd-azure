@@ -1,0 +1,104 @@
+[OSEv3:children]
+masters
+etcd
+nodes
+
+[OSEv3:vars]
+ansible_ssh_user=okd
+ansible_become=true
+
+# Openshift Enterprise
+# openshift_deployment_type=openshift-enterprise
+# openshift_master_identity_providers=[{'name': 'idm', 'challenge': 'true', 'login': 'true', 'kind': 'LDAPPasswordIdentityProvider', 'attributes': {'id': ['dn'], 'email': ['mail'], 'name': ['cn'], 'preferredUsername': ['uid']}, 'bindDN': 'uid=admin,cn=users,cn=accounts,dc=example,dc=com', 'bindPassword': 'ldapadmin', 'ca': '/etc/origin/master/ca.crt', 'insecure': 'false', 'url': 'ldap://ldap.example.com/cn=users,cn=accounts,dc=example,dc=com?uid?sub?(memberOf=cn=ose-user,cn=groups,cn=accounts,dc=example,dc=com)'}]
+
+# Openshift Origin
+openshift_deployment_type=origin
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+openshift_master_htpasswd_users={'OKD_USERNAME': 'OKD_HASHED_PASSWORD'}
+
+#cloudprovider
+openshift_cloudprovider_kind=azure
+openshift_cloudprovider_azure_client_id=AZURE_SP_APP_ID
+openshift_cloudprovider_azure_client_secret=AZURE_SP_APP_PASSWORD
+openshift_cloudprovider_azure_tenant_id=AZURE_SP_TENANT_ID
+openshift_cloudprovider_azure_subscription_id=AZURE_SUBSCRIPTION_ID
+openshift_cloudprovider_azure_resource_group=AZURE_RESOURCE_GROUP
+openshift_cloudprovider_azure_location=AZURE_LOCATION
+#endcloudprovider
+
+# Redhat Registry
+oreg_auth_user=REDHAT_REGISTRY_USERNAME
+oreg_auth_password=REDHAT_REGISTRY_PASSWORD
+
+# Master API and Web UI Ports
+openshift_master_api_port=443
+openshift_master_console_port=443
+
+# Cluster Ingress Router
+openshift_hosted_router_replicas=NUM_ROUTER_REPLICAS
+openshift_hosted_registry_replicas=1
+
+# Cluster Domains
+openshift_master_cluster_method=native
+openshift_master_cluster_hostname=MASTER_PRIVATE_HOSTNAME
+openshift_master_cluster_public_hostname=MASTER_PUBLIC_HOSTNAME
+openshift_master_default_subdomain=MASTER_DEFAULT_SUBDOMAIN
+
+# ########################################################################
+# Uncomment the following to use certificates (acme.sh / let's encrypt)  #
+# ########################################################################
+#
+# openshift_master_overwrite_named_certificates=true
+# openshift_master_named_certificates=[{"certfile": "/home/okd/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/fullchain.cer", "keyfile": "/home/okd/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/MASTER_DEFAULT_SUBDOMAIN.key", "names": ["MASTER_DEFAULT_SUBDOMAIN"], "cafile": "/home/okd/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/ca.cer"}]
+# openshift_hosted_router_certificate={"certfile": "/home/okd/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/fullchain.cer", "keyfile": "/home/okd/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/MASTER_DEFAULT_SUBDOMAIN.key", "cafile": "/home/okd/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/ca.cer"}
+
+
+# Workaround for etcd image not available, skopeo validation fails
+# https://github.com/openshift/openshift-ansible/issues/7721
+openshift_disable_check=memory_availability,disk_availability,docker_image_availability
+
+# Software Defined Networking
+networkPluginName=redhat/ovs-networkpolicy
+# os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
+
+# Image Streams
+openshift_examples_modify_imagestreams=true
+
+# Storage Class change to use managed storage
+openshift_storageclass_parameters={'kind': 'managed', 'storageaccounttype': 'AZURE_STORAGE_ACCOUNT_TYPE'}
+
+# service catalog
+openshift_enable_service_catalog=true
+openshift_hosted_etcd_storage_kind=dynamic
+openshift_hosted_etcd_storage_volume_name=etcd-vol
+openshift_hosted_etcd_storage_access_modes=["ReadWriteOnce"]
+openshift_hosted_etcd_storage_volume_size=SC_STORAGE
+openshift_hosted_etcd_storage_labels={'storage': 'etcd'}
+ansible_service_broker_image="docker.io/ansibleplaybookbundle/origin-ansible-service-broker:ansible-service-broker-1.2.17-1"
+
+# Metrics
+openshift_metrics_install_metrics=true
+openshift_metrics_cassandra_storage_type=dynamic
+openshift_metrics_storage_volume_size=20Gi
+openshift_metrics_hawkular_nodeselector={"node-role.kubernetes.io/infra": "true"}
+openshift_metrics_cassandra_nodeselector={"node-role.kubernetes.io/infra": "true"}
+openshift_metrics_heapster_nodeselector={"node-role.kubernetes.io/infra": "true"}
+
+# Logging
+openshift_logging_install_logging=true
+openshift_logging_es_pvc_dynamic=true
+openshift_logging_storage_volume_size=50Gi
+openshift_logging_es_memory_limit=8Gi
+openshift_logging_kibana_nodeselector={"node-role.kubernetes.io/infra": "true"}
+openshift_logging_curator_nodeselector={"node-role.kubernetes.io/infra": "true"}
+openshift_logging_es_nodeselector={"node-role.kubernetes.io/infra": "true"}
+
+# Setup OKD registry storage to use Azure Blob Storage
+openshift_hosted_registry_storage_kind=object
+openshift_hosted_registry_storage_provider=azure_blob
+openshift_hosted_registry_storage_azure_blob_realm=core.windows.net
+openshift_hosted_registry_storage_azure_blob_container=registry
+openshift_hosted_registry_storage_azure_blob_accountname=AZURE_STORAGE_ACCOUNT_NAME
+openshift_hosted_registry_storage_azure_blob_accountkey=AZURE_STORAGE_ACCOUNT_KEY
+
+# Nodes
