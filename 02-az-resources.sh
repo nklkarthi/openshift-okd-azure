@@ -37,8 +37,6 @@ az storage account create \
 	--location ${LOCATION} \
 	--sku ${STORAGE_SKU}
 
-STORAGE_ACCOUNT_KEY=$(az storage account keys list --account-name ${STORAGE_ACCOUNT_NAME} | python3 -c "import sys, json; print(json.load(sys.stdin)[0]['value'])")
-
 # ------------------------------------------------------------------------------
 # Availability Sets
 # ------------------------------------------------------------------------------
@@ -67,31 +65,39 @@ az vm availability-set create \
 	--resource-group ${OPENSHIFT_RG} \
 	--location ${LOCATION}
 
+# Create ourput dir if not exists
+mkdir -p out
+
 # ------------------------------------------------------------------------------
-# Render Configuration files for master, infrastructure and application nodes,
-# these files are required later on during the Ansible install step.
-# https://docs.okd.io/3.11/install_config/configuring_azure.html#azure-configuration-file
+# Gather required information
 # ------------------------------------------------------------------------------
 SP_ID=$(echo ${SP_JSON} | python3 -c "import sys, json; print(json.load(sys.stdin)['appId'])")
 SP_PASSWORD=$(echo ${SP_JSON} | python3 -c "import sys, json; print(json.load(sys.stdin)['password'])")
 SP_TENANT_ID=$(echo ${SP_JSON} | python3 -c "import sys, json; print(json.load(sys.stdin)['tenant'])")
 
-ACCOUNT_JSON=`az account show`
-
+ACCOUNT_JSON=$(az account show)
 SUBSCRIPTION_ID=$(echo ${ACCOUNT_JSON} | python3 -c "import sys, json; print(json.load(sys.stdin)['id'])")
 SUBSCRIPTION_TENANT_ID=$(echo ${ACCOUNT_JSON} | python3 -c "import sys, json; print(json.load(sys.stdin)['tenantId'])")
 SUBSCRIPTION_CLOUD=$(echo ${ACCOUNT_JSON} | python3 -c "import sys, json; print(json.load(sys.stdin)['environmentName'])")
 
+STORAGE_ACCOUNT_KEY=$(az storage account keys list --account-name ${STORAGE_ACCOUNT_NAME} | python3 -c "import sys, json; print(json.load(sys.stdin)[0]['value'])")
+
+# ------------------------------------------------------------------------------
+# Render Configuration files for master, infrastructure and application nodes,
+# these files are required later on during the Ansible install step.
+# https://docs.okd.io/3.11/install_config/configuring_azure.html#azure-configuration-file
+# ------------------------------------------------------------------------------
+
 for i in master infrastructure application; do
-	echo "tenantId: ${SUBSCRIPTION_TENANT_ID}" > azure.${i}.conf;
-	echo "subscriptionId: ${SUBSCRIPTION_ID}" >> azure.${i}.conf;
-	echo "aadClientId: ${SP_ID}" >> azure.${i}.conf;
-	echo "aadClientSecret: ${SP_PASSWORD}" >> azure.${i}.conf;
-	echo "aadTenantId: ${SP_TENANT_ID}" >> azure.${i}.conf;
-	echo "resourceGroup: ${OPENSHIFT_RG}" >> azure.${i}.conf;
-	echo "cloud: ${SUBSCRIPTION_CLOUD}" >> azure.${i}.conf;
-	echo "location: ${LOCATION}" >> azure.${i}.conf;
-	echo "vnetName: ${VNET_NAME}" >> azure.${i}.conf;
+	echo "tenantId: ${SUBSCRIPTION_TENANT_ID}" > ./out/azure.${i}.conf;
+	echo "subscriptionId: ${SUBSCRIPTION_ID}" >> ./out/azure.${i}.conf;
+	echo "aadClientId: ${SP_ID}" >> ./out/azure.${i}.conf;
+	echo "aadClientSecret: ${SP_PASSWORD}" >> ./out/azure.${i}.conf;
+	echo "aadTenantId: ${SP_TENANT_ID}" >> ./out/azure.${i}.conf;
+	echo "resourceGroup: ${OPENSHIFT_RG}" >> ./out/azure.${i}.conf;
+	echo "cloud: ${SUBSCRIPTION_CLOUD}" >> ./out/azure.${i}.conf;
+	echo "location: ${LOCATION}" >> ./out/azure.${i}.conf;
+	echo "vnetName: ${VNET_NAME}" >> ./out/azure.${i}.conf;
 done
 
 echo "primaryAvailabilitySetName: ${MASTER_AVAILABILITY_SET_NAME}" >> ./out/azure.master.conf
