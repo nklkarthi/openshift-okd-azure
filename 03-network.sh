@@ -33,6 +33,17 @@ az network nsg create \
 	--resource-group ${OPENSHIFT_RG} \
 	--location ${LOCATION}
 
+# Allow HTTP into private subnet
+az network nsg rule create \
+	--name nsg-rule-private-http \
+	--nsg-name ${PRIVATE_NSG_NAME} \
+	--resource-group ${OPENSHIFT_RG} \
+	--priority 1001 \
+	--access Allow \
+	--direction Inbound \
+	--destination-port-ranges "80" \
+	--description "Allow HTTP"
+
 # Allow HTTPS into private subnet
 az network nsg rule create \
 	--name nsg-rule-private-https \
