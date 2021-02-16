@@ -72,8 +72,8 @@ STORAGE_ACCOUNT_NAME=okdsgstoragelrs01
 
 # RedHat Registry
 # Add values from your subscription
-REDHAT_REGISTRY_USERNAME=nklkarthi
-REDHAT_REGISTRY_PASSWORD=Ash60ush
+REDHAT_REGISTRY_USERNAME=
+REDHAT_REGISTRY_PASSWORD=
 
 # ##############################################################################
 #
