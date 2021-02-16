@@ -137,13 +137,13 @@ echo "[masters]" >> ./out/inventory.ini
 for i in `seq ${MASTER_INSTANCE_COUNT}`; do
 	echo "okd-master-${i}" >> ./out/inventory.ini
 done
-echo "\n" >> ./out/inventory.ini
+#echo "\n" >> ./out/inventory.ini
 
 echo "[etcd]" >> ./out/inventory.ini
 for i in `seq ${MASTER_INSTANCE_COUNT}`; do
 	echo "okd-master-${i}" >> ./out/inventory.ini
 done
-echo "\n" >> ./out/inventory.ini
+#echo "\n" >> ./out/inventory.ini
 
 echo "[nodes]" >> ./out/inventory.ini
 for i in `seq ${MASTER_INSTANCE_COUNT}`; do

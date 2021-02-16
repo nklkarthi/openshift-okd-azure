@@ -60,8 +60,8 @@ openshift_master_default_subdomain=MASTER_DEFAULT_SUBDOMAIN
 # ########################################################################
 #
 # openshift_master_overwrite_named_certificates=true
-# openshift_master_named_certificates=[{"certfile": "/home/okd/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/fullchain.cer", "keyfile": "/home/okd/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/MASTER_DEFAULT_SUBDOMAIN.key", "names": ["MASTER_DEFAULT_SUBDOMAIN"], "cafile": "/home/okd/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/ca.cer"}]
-# openshift_hosted_router_certificate={"certfile": "/home/okd/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/fullchain.cer", "keyfile": "/home/okd/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/MASTER_DEFAULT_SUBDOMAIN.key", "cafile": "/home/okd/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/ca.cer"}
+# openshift_master_named_certificates=[{"certfile": "/home/clusteradmin/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/fullchain.cer", "keyfile": "/home/clusteradmin/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/MASTER_DEFAULT_SUBDOMAIN.key", "names": ["MASTER_DEFAULT_SUBDOMAIN"], "cafile": "/home/clusteradmin/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/ca.cer"}]
+# openshift_hosted_router_certificate={"certfile": "/home/clusteradmin/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/fullchain.cer", "keyfile": "/home/clusteradmin/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/MASTER_DEFAULT_SUBDOMAIN.key", "cafile": "/home/clusteradmin/.acme.sh/MASTER_DEFAULT_SUBDOMAIN/ca.cer"}
 
 
 # Workaround for etcd image not available, skopeo validation fails

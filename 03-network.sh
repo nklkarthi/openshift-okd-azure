@@ -99,12 +99,16 @@ az network vnet subnet create \
 # machine in a registration virtual network is deleted, Azure also
 # automatically removes the corresponding DNS record from the linked private
 # zone.
-az network dns zone create \
+az network private-dns zone create \
 	--name ${INTERNAL_DNS_ZONE} \
-	--resource-group ${OPENSHIFT_RG} \
-	--zone-type Private \
-	--registration-vnets ${VNET_NAME}
+	--resource-group ${OPENSHIFT_RG}
 
+az network private-dns link vnet create \
+	--name ${INTERNAL_DNS_ZONE_LINK} \
+	--resource-group ${OPENSHIFT_RG} \
+	--zone-name ${INTERNAL_DNS_ZONE} \
+	--virtual-network ${VNET_NAME} \
+	--registration-enabled true
 
 # ------------------------------------------------------------------------------
 # Two Load Balancers allow network connectivity for scaling and high

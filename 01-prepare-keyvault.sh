@@ -22,10 +22,11 @@ az keyvault create \
 	--name ${KEYVAULT_NAME} \
 	--resource-group ${OPENSHIFT_RG} \
 	--enabled-for-template-deployment true \
+	--enable-soft-delete true \
 	--location ${LOCATION}
 
 # Create a dedicated SSH Key for the cluster
-ssh-keygen -f ./ssh/okd_rsa -t rsa -N ''
+ssh-keygen -f ~/.ssh/okd_rsa -t rsa -N '' -C clusteradmin
 
 # Store the SSH private key in Azure Key Vault
 # The OpenShift deployment uses the SSH key you created to secure access to
@@ -34,4 +35,4 @@ ssh-keygen -f ./ssh/okd_rsa -t rsa -N ''
 az keyvault secret set \
 	--vault-name ${KEYVAULT_NAME} \
 	--name keysecret \
-	--file ./ssh/okd_rsa
+	--file ~/.ssh/okd_rsa

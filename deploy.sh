@@ -4,18 +4,19 @@
 # az login
 
 # You can customize the cluster by editing 00-configuration.sh
+# ./00-configuration.sh
 
 # Prepare Security Infrastructure
-./01-prepare-keyvault.sh
+#./01-prepare-keyvault.sh
 
 # Prepare Service Principal and render configuration files
-./02-az-resources.sh
+#./02-az-resources.sh
 
 # Create the network layer
-./03-network.sh
+#./03-network.sh
 
 # Create the infrastructure layer
-./04-infrastructure.sh
+#./04-infrastructure.sh
 
 # Provision OKD 3.11
-./05-provision-nodes.sh
+#./05-provision-nodes.sh

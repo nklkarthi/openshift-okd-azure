@@ -3,7 +3,7 @@ source 00-configuration.sh
 
 # ------------------------------------------------------------------------------
 # Public Key
-SSH_PUBLIC_KEY=$(cat ssh/okd_rsa.pub)
+SSH_PUBLIC_KEY=$(cat ~/.ssh/okd_rsa.pub)
 
 # ----------------------------------------------------------
 # Virtual Machines

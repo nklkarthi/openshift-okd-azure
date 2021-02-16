@@ -71,7 +71,7 @@ with the following command:
 az vm show --name okd-bastion -g ${OPENSHIFT_RG} -d --query publicIps | sed -e 's/"//g'
 ``` 
 
-Use the generated SSH Keypair, located in `./ssh/okd_rsa` to access this host as user `okd`.
+Use the generated SSH Keypair, located in `~/.ssh/okd_rsa` to access this host as user `okd`.
 
 ## Ansible Provisioning
 
